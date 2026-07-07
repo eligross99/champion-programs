@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Champion Programs</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Champion">
+<meta name="theme-color" content="#151A21">
+<link rel="manifest" href='data:application/json,{"name":"Champion Programs","short_name":"Champion","display":"standalone","background_color":"%23EDEFEA","theme_color":"%23151A21","start_url":"."}'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDEFEA;
+    --card:#FFFFFF;
+    --ink:#151A21;
+    --muted:#626B77;
+    --line:#DCE0D8;
+    --rail-1:#E4A70A; /* yellow band */
+    --rail-2:#D7263D; /* red band */
+    --rail-3:#1F8A4C; /* green band */
+    --rail-4:#2456E6; /* blue band */
+    --rail-5:#7A3FB8; /* purple band */
+    --demo:#D7263D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{font-size:16px}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Barlow',system-ui,-apple-system,sans-serif;
+    line-height:1.45;
+    padding-bottom:64px;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 14px}
+
+  /* ---------- header ---------- */
+  header{
+    background:var(--ink);color:#F4F5F2;
+    padding:18px 0 16px;
+    position:sticky;top:0;z-index:20;
+    box-shadow:0 2px 10px rgba(15,20,26,.25);
+  }
+  header .wrap{display:flex;align-items:center;gap:12px}
+  .brand h1{
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.55rem;
+    letter-spacing:.04em;text-transform:uppercase;line-height:1.05;
+  }
+  .brand p{font-size:.78rem;color:#A9B1BC;letter-spacing:.02em}
+  .backBtn{
+    background:transparent;border:1.5px solid #4A545F;color:#F4F5F2;
+    border-radius:10px;font-family:'Barlow Condensed';font-weight:600;
+    font-size:1rem;letter-spacing:.05em;text-transform:uppercase;
+    padding:8px 14px;cursor:pointer;flex-shrink:0;
+  }
+  .backBtn:active{background:#2A323C}
+
+  /* ---------- home ---------- */
+  .homeIntro{margin:20px 2px 14px}
+  .homeIntro h2{font-family:'Barlow Condensed';font-weight:600;font-size:1.15rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .progCard{
+    display:block;width:100%;text-align:left;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 16px 14px;margin-bottom:12px;cursor:pointer;
+    box-shadow:0 1px 2px rgba(21,26,33,.05);
+    transition:transform .08s ease;
+  }
+  .progCard:active{transform:scale(.985)}
+  .progCard h3{
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.45rem;
+    letter-spacing:.02em;text-transform:uppercase;line-height:1.1;
+  }
+  .progCard .freq{color:var(--muted);font-size:.86rem;margin-top:3px}
+  .progCard .meta{
+    display:inline-block;margin-top:9px;
+    font-family:'Barlow Condensed';font-weight:600;font-size:.92rem;
+    letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink);background:var(--bg);
+    border-radius:6px;padding:2px 9px;
+  }
+
+  /* ---------- program view ---------- */
+  .progHead{margin:20px 2px 4px}
+  .progHead h2{font-family:'Barlow Condensed';font-weight:700;font-size:1.75rem;text-transform:uppercase;letter-spacing:.02em;line-height:1.08}
+  .progHead .freq{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .progNote{
+    background:#FDF6E3;border:1px solid #EAD9A0;border-radius:10px;
+    padding:10px 12px;font-size:.86rem;color:#5C4A12;margin:12px 0 4px;
+  }
+  .tabs{
+    display:flex;gap:8px;overflow-x:auto;padding:14px 2px 10px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+    border-radius:10px;padding:9px 16px;cursor:pointer;
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.05rem;
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+  .tab.on{background:var(--ink);color:#F4F5F2}
+  .progressRow{display:flex;align-items:center;gap:10px;margin:2px 2px 14px}
+  .progressBar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+  .progressBar span{display:block;height:100%;background:var(--ink);border-radius:3px;transition:width .2s}
+  .progressTxt{font-family:'Barlow Condensed';font-weight:600;font-size:.95rem;letter-spacing:.04em;color:var(--muted);white-space:nowrap}
+  .resetBtn{
+    border:none;background:transparent;color:var(--muted);
+    font-size:.8rem;text-decoration:underline;cursor:pointer;padding:4px;
+  }
+
+  /* ---------- groups & exercises ---------- */
+  .group{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    margin-bottom:14px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(21,26,33,.05);
+    display:flex;
+  }
+  .rail{width:6px;flex-shrink:0}
+  .groupBody{flex:1;min-width:0;padding:13px 14px 6px}
+  .groupTitle{
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.08rem;
+    letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px;
+  }
+  .groupSub{font-size:.82rem;color:var(--muted);margin-bottom:4px}
+  .ex{padding:11px 0 12px;border-top:1px dashed var(--line)}
+  .group .ex:first-of-type{border-top:none}
+  .exTop{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .lb{
+    font-family:'Barlow Condensed';font-weight:700;font-size:.9rem;
+    background:var(--bg);border-radius:5px;padding:1px 7px;letter-spacing:.05em;
+  }
+  .exName{font-weight:600;font-size:1rem;line-height:1.3}
+  .rx{
+    font-family:'Barlow Condensed';font-weight:700;font-size:1.02rem;
+    letter-spacing:.03em;white-space:nowrap;margin-left:auto;
+    font-variant-numeric:tabular-nums;
+  }
+  .exNotes{margin-top:4px;font-size:.84rem;color:var(--muted)}
+  .exNotes div{padding-left:10px;position:relative}
+  .exNotes div::before{content:"–";position:absolute;left:0}
+  .exActions{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+  .demo{
+    display:inline-flex;align-items:center;gap:6px;
+    border:1.5px solid var(--demo);color:var(--demo);background:transparent;
+    border-radius:8px;padding:6px 12px;
+    font-family:'Barlow Condensed';font-weight:700;font-size:.95rem;
+    letter-spacing:.06em;text-transform:uppercase;text-decoration:none;
+  }
+  .demo:active{background:#FBEBED}
+  .demo svg{width:11px;height:11px}
+  .pills{display:flex;gap:7px;margin-left:auto}
+  .pill{
+    width:36px;height:36px;border-radius:50%;
+    border:1.5px solid var(--line);background:var(--bg);color:var(--muted);
+    font-family:'Barlow Condensed';font-weight:700;font-size:1rem;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .pill.done{color:#fff;border-color:transparent}
+  .pillUnit{font-size:.7rem;color:var(--muted);align-self:center;letter-spacing:.04em;text-transform:uppercase}
+
+  /* drill sub-lists (pogo variants, ladder patterns, etc.) */
+  .subs{margin-top:8px}
+  .sub{
+    display:flex;align-items:center;gap:10px;
+    padding:7px 0;border-top:1px dotted var(--line);
+  }
+  .sub:first-child{border-top:none}
+  .subName{font-size:.92rem;font-weight:500;flex:1;min-width:0}
+  .subRx{font-family:'Barlow Condensed';font-weight:600;font-size:.92rem;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .subDemo{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:30px;border:1.5px solid var(--demo);border-radius:7px;
+    color:var(--demo);text-decoration:none;flex-shrink:0;
+  }
+  .subDemo svg{width:10px;height:10px}
+
+  .sessionNote{
+    text-align:center;font-size:.78rem;color:var(--muted);
+    margin:18px 6px 8px;
+  }
+  footer{
+    text-align:center;font-size:.75rem;color:var(--muted);
+    padding:10px 14px 26px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <button class="backBtn" id="backBtn" style="display:none">&#8592; All</button>
+    <div class="brand">
+      <h1 id="hTitle">Champion Programs</h1>
+      <p id="hSub">PT programs from Dan Pope &middot; tap any exercise's Demo to watch</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+<footer id="foot"></footer>
+
+<script>
+/* ============================================================
+   DATA — transcribed from the original Google Doc.
+   lb = superset label, rx = prescription, sets = # of check pills,
+   unit = what a pill represents (default "set"), url = demo video
+   ============================================================ */
+
+const PLAY = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1.2v9.6L10.5 6z"/></svg>';
+
+/* --- shared blocks (used by both ankle programs) --- */
+const ankleWarmup = {
+  title:"Warm-up", sub:"Do before each main day", items:[
+  {name:"3-way ankle DF vs. wall", url:"https://youtu.be/b6BTRilWtxI", rx:"5 / direction", sets:1, notes:["Push into where discomfort is felt, don't push through pain"]},
+  {name:"Quadruped ankle PF mobility", url:"https://youtu.be/_0Z0obl15TY", rx:"× 10", sets:1, notes:["Push into where discomfort is felt, don't push through pain"]},
+  {name:"Seated pronation / supination", url:"https://youtu.be/2IjTuaqosEw", rx:"10 each", sets:1},
+  {name:"Seated ankle dorsiflexion + plantarflexion", url:"https://youtu.be/TwICCB2etOs", rx:"10 each", sets:1},
+  {name:"Ankle circles", url:"https://youtu.be/OPc27yJ7Ptw", rx:"10 / direction", sets:1}
+]};
+
+const pogoBlock = {
+  title:"Pogo Jumps", sub:"2 rounds of everything below", items:[
+  {name:"Pogo circuit", rx:"2 rounds", sets:2, unit:"round", subs:[
+    {name:"Feet together", url:"https://youtube.com/shorts/Nx5jh1YQxB8", rx:"× 20"},
+    {name:"Moguls", url:"https://youtube.com/shorts/js7WtLKsikA", rx:"× 20"},
+    {name:"Wide-out", url:"https://youtube.com/shorts/-yGFgNp28gA", rx:"× 20"},
+    {name:"Scissor", url:"https://youtube.com/shorts/P056kJumYUw", rx:"× 20"},
+    {name:"\u201CX\u201Ds", url:"https://youtube.com/shorts/Bw8-sPXPMCI", rx:"× 20"},
+    {name:"FFE pogos", url:"https://youtube.com/shorts/DWQmcfjAqP8", rx:"2 × 15 / side"}
+  ]}
+]};
+
+function ladderBlock(rounds){ return {
+  title:"Ladder Drills", sub: rounds + "× down and back, each pattern", items:[
+  {name:"Ladder circuit", rx: rounds + "× down + back", sets:rounds, unit:"round", subs:[
+    {name:"Cuts (laterally)", url:"https://youtube.com/shorts/c48_VvvdFYQ", rx:""},
+    {name:"Cuts (sagittal)", url:"https://youtube.com/shorts/0-nJEg_awaA", rx:""},
+    {name:"Icky", url:"https://youtube.com/shorts/N00OKDQOFXg", rx:""},
+    {name:"Icky cross-over", url:"https://youtube.com/shorts/OpsxzPxLVvk", rx:""},
+    {name:"Icky 2-foot cuts", url:"https://youtube.com/shorts/f4Fy4RPuSIQ", rx:""}
+  ]}
+]};}
+
+const dynWarmup = {
+  title:"Dynamic Warm-up", sub:"2 × 15 meters down and back / side", items:[
+  {name:"Movement circuit", rx:"2 × 15 m each", sets:2, unit:"round", subs:[
+    {name:"Tall shuffle", url:"https://youtube.com/shorts/rQfx1dNt2oY", rx:""},
+    {name:"Low shuffle", url:"https://youtube.com/shorts/QIEO5L0cQoU", rx:""},
+    {name:"Tall carioca", url:"https://youtube.com/shorts/t84OcieWnPc", rx:""},
+    {name:"Low carioca", url:"https://youtube.com/shorts/-HBz8UvAWt4", rx:""},
+    {name:"Skip", url:"https://youtube.com/shorts/exHcJy7XiN0", rx:""},
+    {name:"Lateral skip", url:"https://youtube.com/shorts/som-kwrSy1A", rx:""}
+  ]}
+]};
+
+function offDayItems(extra){
+  const base = [
+    {name:"3-way ankle DF vs. wall", url:"https://youtu.be/b6BTRilWtxI", rx:"5 / direction", sets:2, notes:["Push into where discomfort is felt, don't push through pain"]},
+    {name:"Quadruped ankle PF mobility", url:"https://youtu.be/_0Z0obl15TY", rx:"× 10", sets:2, notes:["Push into where discomfort is felt, don't push through pain"]},
+    {name:"Seated pronation / supination", url:"https://youtu.be/2IjTuaqosEw", rx:"10 each", sets:2},
+    {name:"Seated ankle dorsiflexion + plantarflexion", url:"https://youtu.be/TwICCB2etOs", rx:"10 each", sets:2},
+    {name:"Ankle circles", url:"https://youtu.be/OPc27yJ7Ptw", rx:"10 / direction", sets:2}
+  ];
+  const tail = [
+    {name:"Double leg calf raise off step (pause top)", url:"https://youtu.be/Bi2qVoydRok?si=-OhcqIYPXvPu5yBS", rx:"× 10", sets:2, notes:["From deficit","Pause at the bottom of each rep (stretch position)"]},
+    {name:"Double leg tib raise (back to wall)", url:"https://youtube.com/shorts/d59BlBrXs4c", rx:"× 10", sets:2, notes:["Back to wall","Bring feet further from wall as tolerance improves","Pause at the bottom of each rep (stretch position)"]},
+    {name:"Single leg balance (eyes closed)", url:"https://youtu.be/H4NQwbZEkIA", rx:"30\u201360 sec", sets:2}
+  ];
+  return base.concat(extra || []).concat(tail);
+}
+
+/* ---------------- PROGRAMS ---------------- */
+const PROGRAMS = [
+
+{ id:"hip", title:"Hip Program", freq:"2\u20133× / week",
+  days:[
+    { name:"Circuit", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Tall Plank Band Resisted Hip Flexion", url:"https://youtu.be/s4yADWtvhDU", rx:"3 × 8\u201310 / side", sets:3},
+        {lb:"1b", name:"Copenhagen Plank (on mid-shin)", url:"https://youtu.be/i7n0i0bIeII", rx:"3 × 8\u201310 / side", sets:3, notes:["Pause 1 second at top of motion"]},
+        {lb:"1c", name:"\u00BD Bridge Clamshell (band resisted)", url:"https://youtu.be/OMk4AfenZEw?t=5", rx:"3 × 10\u201312 / side", sets:3}
+      ]}
+    ]}
+  ]},
+
+{ id:"ankle1", title:"Ankle Program 1", freq:"Main days 3× / week (Mon \u00B7 Wed \u00B7 Fri) + off-day work 2\u20133× / week",
+  days:[
+    { name:"Day 1", groups:[
+      ankleWarmup, pogoBlock, ladderBlock(2),
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"FFE calf raise \u2013 deficit", url:"https://youtube.com/shorts/wJDlcsSthvg", rx:"3 × 10 / side", sets:3},
+        {lb:"2b", name:"SL balance with 4-way reaching", url:"https://youtu.be/2FVyqaeRJos", rx:"3 × 3 / direction", sets:3, notes:["Eyes closed"]}
+      ]},
+      { title:"Strength \u00B7 Block 3", sub:"Superset 3a + 3b", items:[
+        {lb:"3a", name:"Back to wall tib raise", url:"https://youtube.com/shorts/d59BlBrXs4c", rx:"3 × 15+", sets:3, notes:["\u201C+\u201D = keep going until close to failure"]},
+        {lb:"3b", name:"DB reverse lunge", url:"https://youtube.com/shorts/uy7v8ZySYcU", rx:"3 × 10\u201312 / side", sets:3}
+      ]}
+    ]},
+    { name:"Day 2", groups:[
+      ankleWarmup, pogoBlock, ladderBlock(2),
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"Seated calf raise (slant board) DB", rx:"2 × 12 each way", sets:4, notes:["2 sets × 12 inverted, 2 sets × 12 everted (demo links below)"], subs:[
+          {name:"Inverted version", url:"https://youtube.com/shorts/dX3A0rtshKo", rx:"2 × 12"},
+          {name:"Everted version", url:"https://youtube.com/shorts/oVbKOZOppE0", rx:"2 × 12"}
+        ]},
+        {lb:"2b", name:"SL balance + tall airplane", url:"https://youtube.com/shorts/YPnZgjQ86es", rx:"3 × 6\u20138 / direction", sets:3}
+      ]},
+      { title:"Strength \u00B7 Block 3", sub:"Superset 3a + 3b", items:[
+        {lb:"3a", name:"DB seated tib raise (slant board)", url:"https://youtube.com/shorts/AzueJNrc0sY?feature=share", rx:"3 × 15", sets:3},
+        {lb:"3b", name:"Heel float DB step-up", url:"https://youtube.com/shorts/dSfjxuEsKkw", rx:"3 × 12", sets:3}
+      ]}
+    ]},
+    { name:"Day 3", groups:[
+      ankleWarmup, pogoBlock, ladderBlock(2),
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"FFE calf raise (pause 1 sec at top)", url:"https://youtube.com/shorts/mZfDLRJZu4o", rx:"3 × 12", sets:3},
+        {lb:"2b", name:"SL balance with 3-way UE reaching", url:"https://youtu.be/EvbtkgL3ovI", rx:"3 × 5 / direction", sets:3, notes:["Stand on unstable surface"]}
+      ]},
+      { title:"Strength \u00B7 Block 3", sub:"Superset 3a + 3b", items:[
+        {lb:"3a", name:"Back to wall tib raise (eccentric lowering)", url:"https://youtube.com/shorts/d59BlBrXs4c", rx:"3 × 6\u20138", sets:3, notes:["2 second lower"]},
+        {lb:"3b", name:"SL squat to box (counterbalance)", url:"https://youtu.be/ikwpNCVuSzU", rx:"3 × 10\u201312", sets:3}
+      ]}
+    ]},
+    { name:"Off Days", groups:[
+      { title:"Off-day Routine", sub:"2\u20133× / week between main days \u00B7 2 sets on each side", items: offDayItems() }
+    ]}
+  ]},
+
+{ id:"ankle2", title:"Ankle Program 2", freq:"Main days 3× / week (Mon \u00B7 Wed \u00B7 Fri) + off-day work 2\u20133× / week",
+  note:"Progression of Ankle Program 1 \u2014 more plyometrics and harder variations.",
+  days:[
+    { name:"Day 1", groups:[
+      ankleWarmup, dynWarmup, ladderBlock(3),
+      { title:"Jumps", items:[
+        {name:"Single leg pogo jump", url:"https://youtube.com/shorts/m5PfawUtbWI", rx:"3 × 12 / side", sets:3},
+        {name:"Box jump + landing", url:"https://youtube.com/shorts/R21W9w9AIYc", rx:"3 × 6", sets:3},
+        {name:"Heiden + stick", url:"https://youtube.com/shorts/vhekXV8Abxk", rx:"3 × 4 / side", sets:3}
+      ]},
+      { title:"Strength \u00B7 Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"FFE calf raise \u2013 deficit", url:"https://youtube.com/shorts/wJDlcsSthvg", rx:"3 × 8 / side", sets:3},
+        {lb:"1b", name:"SL balance with 4-way reaching", url:"https://youtu.be/2FVyqaeRJos", rx:"3 × 3 / direction", sets:3, notes:["Eyes closed + unstable surface"]}
+      ]},
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"Back to wall tib raise (slant)", url:"https://youtube.com/shorts/lFZqDpULe-Y", rx:"3 × 15+", sets:3, notes:["\u201C+\u201D = keep going until close to failure"]},
+        {lb:"2b", name:"Heel float reverse lunge", url:"https://youtube.com/shorts/zujnGprFdmI", rx:"3 × 10\u201312 / side", sets:3}
+      ]}
+    ]},
+    { name:"Day 2", groups:[
+      ankleWarmup, dynWarmup, ladderBlock(3),
+      { title:"Jumps", items:[
+        {name:"Single leg pogo jump", url:"https://youtube.com/shorts/m5PfawUtbWI", rx:"3 × 12 / side", sets:3},
+        {name:"Broad jump", url:"https://youtube.com/shorts/3hfnboyi9FQ", rx:"3 × 6\u20138", sets:3},
+        {name:"SL box jump + SL box landing", url:"https://youtube.com/shorts/M4pUECk_MPI", rx:"3 × 5 / side", sets:3}
+      ]},
+      { title:"Strength \u00B7 Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"Seated calf raise (slant board) DB", rx:"2 × 12 each way", sets:4, notes:["2 sets × 12 inverted, 2 sets × 12 everted"], subs:[
+          {name:"Inverted version", url:"https://youtube.com/shorts/dX3A0rtshKo", rx:"2 × 12"},
+          {name:"Everted version", url:"https://youtube.com/shorts/oVbKOZOppE0", rx:"2 × 12"}
+        ]},
+        {lb:"1b", name:"SL balance + tall airplane (waterball / MB)", url:"https://youtube.com/shorts/2wa2lXvYcJg", rx:"3 × 6\u20138 / side", sets:3}
+      ]},
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"Short step-down tib raise (slant board)", rx:"2 × 10\u201312 / side each way", sets:4, notes:["2 sets upslope, 2 sets downslope"], subs:[
+          {name:"Upslope version", url:"https://youtube.com/shorts/ixp34CV2EYM", rx:"2 × 10\u201312 / side"},
+          {name:"Downslope version", url:"https://youtube.com/shorts/KwSLpuv55uo", rx:"2 × 10\u201312 / side"}
+        ]},
+        {lb:"2b", name:"Slant board DB step-up", url:"https://youtu.be/pugghpueA5w", rx:"3 × 10\u201312 / side", sets:3}
+      ]}
+    ]},
+    { name:"Day 3", groups:[
+      ankleWarmup, dynWarmup, ladderBlock(3),
+      { title:"Jumps", items:[
+        {name:"Single leg pogo jump", url:"https://youtube.com/shorts/m5PfawUtbWI", rx:"3 × 12 / side", sets:3},
+        {name:"DL jump through hurdles (stick + reset)", url:"https://youtube.com/shorts/x3Lm2f_OZRo", rx:"3 × 6\u20138", sets:3},
+        {name:"SL broad jump to stick (sagittal)", url:"https://youtu.be/Kr3tNFDPoi0?si=ziFQGVzPPaJ5GYKu", rx:"3 × 4\u20136 / side", sets:3}
+      ]},
+      { title:"Strength \u00B7 Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"FFE calf raise (toes only)", url:"https://youtube.com/shorts/k_8dn5M2fn0", rx:"3 × 10\u201312", sets:3},
+        {lb:"1b", name:"SL balance with 3-way UE reaching (waterball)", url:"https://youtube.com/shorts/fHtqdshMAMc", rx:"3 × 5 / direction", sets:3, notes:["Unstable surface"]}
+      ]},
+      { title:"Strength \u00B7 Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"Back to wall tib raise (eccentric lowering)", url:"https://youtube.com/shorts/WFTW0c6FrAk", rx:"3 × 6\u20138 / side", sets:3, notes:["Use DBs and lower reps"]},
+        {lb:"2b", name:"Lateral deadlift", url:"https://youtube.com/shorts/R5PfwPWV0zs", rx:"3 × 8\u201310 / side", sets:3}
+      ]}
+    ]},
+    { name:"Off Days", groups:[
+      { title:"Off-day Routine", sub:"2\u20133× / week between main days \u00B7 2 sets on each side", items: offDayItems([
+        {name:"Band resisted inversion", url:"https://youtu.be/gJUeRmTDD_8", rx:"× 15", sets:2},
+        {name:"Band resisted eversion", url:"https://youtu.be/v7CCo8Kds4g", rx:"× 15", sets:2}
+      ])}
+    ]}
+  ]},
+
+{ id:"shoulder", title:"Shoulder Pain Program", freq:"3 days / week",
+  days:[
+    { name:"Day 1", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Side plank ER", url:"https://youtu.be/ceWHMwEX6EE", rx:"3 × 10 / side", sets:3},
+        {lb:"1b", name:"Dumbbell floor press", url:"https://youtu.be/MpjAFS6QiM8", rx:"3 × 10", sets:3, notes:["3 second lower"]},
+        {lb:"1c", name:"Seated cable row", url:"https://youtu.be/qPDm6zdTY-I", rx:"4 × 12", sets:4, notes:["2 second eccentric (lowering)"]}
+      ]}
+    ]},
+    { name:"Day 2", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Scaption (pause at top)", url:"https://youtu.be/lOzxxnI11C0", rx:"3 × 10", sets:3},
+        {lb:"1b", name:"Plank turn", url:"https://youtu.be/HMfy8PCRgFM", rx:"4 × 6\u201310 / side", sets:4, notes:["Slow and controlled throughout"]},
+        {lb:"1c", name:"Dumbbell seal row", url:"https://youtu.be/5J8bATi_Yh8", rx:"4 × 8", sets:4}
+      ]}
+    ]},
+    { name:"Day 3", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Band 90-90 IR", url:"https://youtu.be/xNImK_A-B3c", rx:"3 × 10 / side", sets:3},
+        {lb:"1b", name:"\u00BD kneeling landmine press (135\u00B0)", url:"https://youtu.be/ztXGOLFmPfc", rx:"3 × 10", sets:3, notes:["3 second eccentric phase"]},
+        {lb:"1c", name:"\u00BD kneel overhead pull-down (135\u00B0)", url:"https://youtu.be/cx-vZyIFCTg", rx:"3 × 10", sets:3, notes:["3 second eccentric"]}
+      ]}
+    ]}
+  ]},
+
+{ id:"fullbody", title:"Full Body Foundation", freq:"Strength-focused \u00B7 deload off intensive movements",
+  note:"3× / week calf strength (1× / week toes off edge) \u00B7 1\u20132× / week plyos or practice. Lower days: A, C, E. Upper days: B, D (+ optional arms day).",
+  days:[
+    { name:"Plyos 1", groups:[
+      { title:"Plyo Warm-up", items:[
+        {name:"Pogo jumps (2 feet)", rx:"1 round", sets:1, unit:"round", subs:[
+          {name:"Feet together", rx:"× 20"},
+          {name:"Wide-out", rx:"× 20"},
+          {name:"Scissor", rx:"× 20"},
+          {name:"High jumps", rx:"2 × 10"}
+        ]},
+        {name:"Single leg pogo jump", rx:"1 round", sets:1, unit:"round", subs:[
+          {name:"One leg", rx:"× 10"},
+          {name:"Side to side", rx:"5 / direction"},
+          {name:"Forward / backwards", rx:"5 / direction"}
+        ]}
+      ]},
+      { title:"Plyo Day 1", items:[
+        {name:"Single leg bounds", rx:"3 × 10 / side", sets:3},
+        {name:"Double leg jump + \u00BD turns", rx:"3 × 5 / direction", sets:3}
+      ]}
+    ]},
+    { name:"Plyos 2", groups:[
+      { title:"Plyo Warm-up", items:[
+        {name:"Pogo jumps (2 feet)", rx:"1 round", sets:1, unit:"round", subs:[
+          {name:"Feet together", rx:"× 20"},
+          {name:"Wide-out", rx:"× 20"},
+          {name:"Scissor", rx:"× 20"},
+          {name:"High jumps", rx:"2 × 10"}
+        ]},
+        {name:"Single leg pogo jump", rx:"1 round", sets:1, unit:"round", subs:[
+          {name:"One leg", rx:"× 10"},
+          {name:"Side to side", rx:"5 / direction"},
+          {name:"Forward / backwards", rx:"5 / direction"}
+        ]}
+      ]},
+      { title:"Plyo Day 2", items:[
+        {name:"Skater bounds", rx:"3 × 6\u20138 / side", sets:3},
+        {name:"Double leg jump (side to side)", rx:"3 × 5 / direction", sets:3}
+      ]}
+    ]},
+    { name:"Day A", groups:[
+      { title:"Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"Goblet squat", rx:"4 × 10\u201312", sets:4},
+        {lb:"1b", name:"Seated calf raise", rx:"3 × 15\u201320", sets:3}
+      ]},
+      { title:"Block 2", sub:"Rotate 2a \u2192 2b \u2192 2c", items:[
+        {lb:"2a", name:"Good morning (plate to chest)", rx:"3 × 10\u201312", sets:3},
+        {lb:"2b", name:"Side bridge (feet apart)", url:"https://youtu.be/-oBlBBB4cRc", rx:"3 × 20\u201340 sec / side", sets:3},
+        {lb:"2c", name:"Lateral bear crawl", url:"https://youtu.be/oPzX9WHrBMg", rx:"3 × 15\u201320 steps / side", sets:3}
+      ]}
+    ]},
+    { name:"Day B", groups:[
+      { title:"Bench Press Emphasis \u00B7 Block 1", sub:"Superset 1a + 1b \u00B7 90 sec rest", items:[
+        {lb:"1a", name:"Close grip floor press (pause at floor)", rx:"weekly scheme", sets:4, notes:["Week 1: 3 × 10 \u00B7 Week 2: 10, 10, 8, 8 \u00B7 Week 3: 4 × 10 \u00B7 Week 4: 3 × 8","All sets at RPE 8","1\u20132 second lower"]},
+        {lb:"1b", name:"Pull-up \u2013 overhand grip (2 sec lower)", url:"https://youtu.be/nOmtVzZbHNk", rx:"4 × 8\u201310", sets:4, notes:["Band assisted if needed \u2014 see second demo"], subs:[
+          {name:"Band assisted version", url:"https://youtu.be/p2pvPJ3IzFQ", rx:""}
+        ]}
+      ]},
+      { title:"Block 2", sub:"Superset 2a + 2b \u00B7 60 sec rest", items:[
+        {lb:"2a", name:"DB bench press", rx:"weekly scheme", sets:3, notes:["Weeks 1 + 4: 3 × 10 \u00B7 Weeks 2 + 3: 3 × 12"]},
+        {lb:"2b", name:"Chest supported DB row", url:"https://youtu.be/uT9mZutc1Zo", rx:"weekly scheme", sets:3, notes:["Weeks 1 + 4: 3 × 10 \u00B7 Weeks 2 + 3: 3 × 12"]}
+      ]},
+      { title:"Block 3", sub:"Rotate 3a \u2192 3b \u2192 3c \u00B7 30 sec rest", items:[
+        {lb:"3a", name:"Chest supported incline A", rx:"3 × 10\u201312", sets:3},
+        {lb:"3b", name:"EZ bar preacher curl", url:"https://youtu.be/zdhpPa1wF-I", rx:"3 × 10\u201312", sets:3},
+        {lb:"3c", name:"Cable triceps press-down (straight bar)", url:"https://youtu.be/yE1XacQCHO4", rx:"3 × 10\u201312", sets:3}
+      ]}
+    ]},
+    { name:"Day C", groups:[
+      { title:"Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"Barbell hip thrust (1 sec pause at top)", url:"https://youtu.be/oaojgCcpks0", rx:"3 × 8\u201310", sets:3},
+        {lb:"1b", name:"Seated calf raise (toes only)", rx:"3 × 10\u201312", sets:3}
+      ]},
+      { title:"Block 2", sub:"Rotate 2a \u2192 2b \u2192 2c", items:[
+        {lb:"2a", name:"Dumbbell suitcase carry \u2013 march", url:"https://youtu.be/3RKKnZhhelE", rx:"3 × 20 m / side", sets:3},
+        {lb:"2b", name:"Plank with plate drag", url:"https://youtu.be/46mcHTYJzSY", rx:"3 × 6\u20138 / side", sets:3},
+        {lb:"2c", name:"DB step-up", rx:"3 × 8\u201310 / side", sets:3}
+      ]}
+    ]},
+    { name:"Day D", groups:[
+      { title:"Upper Body \u00B7 Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"Bench press from pins (set 2\u20134\u201D off chest)", url:"https://youtu.be/_5PeCEEsm_c", rx:"weekly scheme", sets:3, notes:["Week 1: 3 × 10 \u00B7 Week 2: 12, 12, 10 \u00B7 Week 3: 12, 12, 12 \u00B7 Week 4: 2 × 10","Full pause at the pins"]},
+        {lb:"1b", name:"Barbell inverted row (underhand)", url:"https://youtu.be/TNmIC0slenQ", rx:"4 × 15", sets:4}
+      ]},
+      { title:"Block 2", sub:"Superset 2a + 2b", items:[
+        {lb:"2a", name:"Low incline DB press", rx:"3 × 8\u201310 / side", sets:3, notes:["2 second lower"]},
+        {lb:"2b", name:"\u00BD kneel cable pull-down", url:"https://youtu.be/TE29t2zMMGg", rx:"3 × 8\u201310 / side", sets:3}
+      ]},
+      { title:"Block 3", sub:"Superset 3a + 3b", items:[
+        {lb:"3a", name:"Side-lying DB ER", url:"https://youtu.be/af3Qy82vjRg", rx:"3 × 8\u201310 / side", sets:3},
+        {lb:"3b", name:"Retro crawl", url:"https://youtu.be/EtKhYx-IrnM", rx:"3 × 10 steps / side", sets:3, notes:["Backwards only"]}
+      ]}
+    ]},
+    { name:"Day E", groups:[
+      { title:"Block 1", sub:"Superset 1a + 1b", items:[
+        {lb:"1a", name:"Trap bar deadlift", rx:"4 × 10\u201312", sets:4},
+        {lb:"1b", name:"Double leg calf raise off step (toes only)", rx:"3 × max", sets:3}
+      ]},
+      { title:"Block 2", sub:"Rotate 2a \u2192 2b \u2192 2c", items:[
+        {lb:"2a", name:"Split squat (with DBs)", rx:"3 × 8 / side", sets:3, notes:["2 second lower"]},
+        {lb:"2b", name:"Side bridge clamshells", rx:"3 × 10\u201315 / side", sets:3},
+        {lb:"2c", name:"Physioball stir the pot", url:"https://youtu.be/ifqjQ22M1dA", rx:"3 × 6\u20138 / direction", sets:3}
+      ]}
+    ]},
+    { name:"Arms (Opt.)", groups:[
+      { title:"Shoulders + Arms \u00B7 Block 1", sub:"Rotate 1a \u2192 1b \u2192 1c \u00B7 60 sec rest", items:[
+        {lb:"1a", name:"Incline bench A", rx:"3 × 10", sets:3},
+        {lb:"1b", name:"DB hammer curl", url:"https://youtu.be/BYT22AETQ4I", rx:"3 × 10", sets:3},
+        {lb:"1c", name:"Incline bench DB skull crusher \u2192 cable instead", url:"https://youtu.be/WQM6K6Ux6lI", rx:"3 × 10", sets:3}
+      ]},
+      { title:"Block 2", sub:"Rotate 2a \u2192 2b \u2192 2c \u00B7 30 sec rest", items:[
+        {lb:"2a", name:"Cable pec fly (low attachment)", url:"https://youtu.be/Fb1-E4u94CQ", rx:"3 × 10", sets:3},
+        {lb:"2b", name:"2-hand bilateral pull-down", rx:"3 × 10\u201312", sets:3},
+        {lb:"2c", name:"DB shrug (pause in full stretch)", url:"https://youtu.be/1g9jYT1kT3s", rx:"3 × 10", sets:3}
+      ]},
+      { title:"Block 3", sub:"Superset 3a + 3b \u00B7 30 sec rest", items:[
+        {lb:"3a", name:"Straight bar curl", url:"https://youtu.be/OUhAo6vtwhY", rx:"3 × 10", sets:3},
+        {lb:"3b", name:"Overhead tricep rope extension", url:"https://youtu.be/ZG0_9PbkRS8", rx:"3 × 10", sets:3}
+      ]}
+    ]}
+  ]},
+
+{ id:"groin", title:"Groin / Adductor Warm-up", freq:"Before play or training",
+  days:[
+    { name:"Warm-up", groups:[
+      { title:"1 \u00B7 Foam Roll Groin", items:[
+        {name:"Foam roll \u2013 sitting", rx:"30 sec", sets:1},
+        {name:"Foam roll \u2013 face down", rx:"30 sec", sets:1}
+      ]},
+      { title:"2 \u00B7 Groin Stretch", items:[
+        {name:"\u00BD kneel groin stretch", rx:"30 sec", sets:1},
+        {name:"Hands and knees, leg to side", rx:"× 15 rocks", sets:1},
+        {name:"Leg swings", rx:"10 / side", sets:1},
+        {name:"3-way lunge", rx:"3 / direction", sets:1}
+      ]},
+      { title:"3 \u00B7 Frequency Drills", items:[
+        {name:"Wide-outs", rx:"2 × 10", sets:2},
+        {name:"Open / close the gate", rx:"2 × 10", sets:2},
+        {name:"Single leg cut over line", rx:"2 × 10 / side", sets:2},
+        {name:"Cuts", rx:"2 × 10", sets:2}
+      ]}
+    ]}
+  ]},
+
+{ id:"hipextra", title:"Hip Strength Add-On", freq:"3 days \u00B7 originally \u201CIdeas for Kiefer\u201D",
+  note:"Coach's notes: aim for a little more posterior pelvic tilt during exercises \u00B7 limit wide-stance, deep-depth and lateral squat / lunge variations for a few weeks.",
+  days:[
+    { name:"Day 1", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"DB reverse lunge (contralateral load) off 4\u201D deficit", url:"https://youtu.be/qg0ryI_KwXs", rx:"3 × 8 / side", sets:3},
+        {lb:"1b", name:"\u00BD side bridge abduction", url:"https://youtu.be/OMk4AfenZEw?t=10", rx:"3 × 10", sets:3},
+        {lb:"1c", name:"Band resisted dead bug", url:"https://youtu.be/z6W_HhOn050", rx:"3 × 8\u201310 / side", sets:3, notes:["1 second pause at reach","Use ankle weights if available"]}
+      ]}
+    ]},
+    { name:"Day 2", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Single leg bridge (loaded \u2013 sandbag or chains)", url:"https://youtu.be/yIn7e11SsoY", rx:"3 × 8\u201310 / side", sets:3},
+        {lb:"1b", name:"Dumbbell farmer's walk", url:"https://youtu.be/xSrPDlft9sE", rx:"3 × 15 steps / side", sets:3},
+        {lb:"1c", name:"Plank with overhead reaches", url:"https://youtu.be/HtQOdMYoVwI", rx:"3 × 8 reaches / side", sets:3}
+      ]}
+    ]},
+    { name:"Day 3", groups:[
+      { title:"Superset 1", sub:"Rotate through 1a \u2192 1b \u2192 1c", items:[
+        {lb:"1a", name:"Single leg deadlift (DB in opposite arm)", url:"https://youtu.be/p2CYrJ5cDmI", rx:"3 × 8\u201310", sets:3},
+        {lb:"1b", name:"Side bridge (feet apart)", url:"https://youtu.be/-oBlBBB4cRc", rx:"3 × 20\u201340 sec / side", sets:3},
+        {lb:"1c", name:"Copenhagen plank (on mid-shin)", url:"https://youtu.be/i7n0i0bIeII", rx:"3 × 10\u201312 / side", sets:3}
+      ]}
+    ]}
+  ]}
+];
+
+/* ============================================================
+   STATE + RENDERING
+   ============================================================ */
+const state = { view:"home", prog:null, day:0, done:{} };
+/* Persist progress between sessions (works once the app is hosted;
+   falls back silently to session-only if storage is unavailable). */
+const STORE = "champion-progress";
+try {
+  const saved = localStorage.getItem(STORE);
+  if(saved) state.done = JSON.parse(saved) || {};
+} catch(e) { /* storage unavailable — session-only mode */ }
+function persist(){
+  try { localStorage.setItem(STORE, JSON.stringify(state.done)); } catch(e) {}
+}
+const RAILS = ["var(--rail-1)","var(--rail-2)","var(--rail-3)","var(--rail-4)","var(--rail-5)"];
+const main = document.getElementById("main");
+const foot = document.getElementById("foot");
+const backBtn = document.getElementById("backBtn");
+const hTitle = document.getElementById("hTitle");
+const hSub = document.getElementById("hSub");
+
+backBtn.addEventListener("click", () => { state.view = "home"; state.prog = null; render(); window.scrollTo(0,0); });
+
+function key(p,d,g,i,s){ return [p,d,g,i,s].join("|"); }
+
+function dayTotals(prog, dIdx){
+  let total = 0, done = 0;
+  prog.days[dIdx].groups.forEach((g,gi) => g.items.forEach((it,ii) => {
+    for(let s=0; s<it.sets; s++){
+      total++;
+      if(state.done[key(prog.id,dIdx,gi,ii,s)]) done++;
+    }
+  }));
+  return {total, done};
+}
+
+function render(){
+  if(state.view === "home") renderHome(); else renderProgram();
+}
+
+function renderHome(){
+  backBtn.style.display = "none";
+  hTitle.textContent = "Champion Programs";
+  hSub.textContent = "PT programs from Dan Pope \u00B7 tap any exercise's Demo to watch";
+  let html = '<div class="homeIntro"><h2>Pick a program</h2></div>';
+  PROGRAMS.forEach(p => {
+    const dayWord = p.days.length === 1 ? p.days[0].name : p.days.length + " days";
+    html += '<button class="progCard" data-prog="' + p.id + '">' +
+      '<h3>' + p.title + '</h3>' +
+      '<div class="freq">' + p.freq + '</div>' +
+      '<span class="meta">' + dayWord + '</span>' +
+      '</button>';
+  });
+  main.innerHTML = html;
+  foot.textContent = "Set check-offs last for this session only \u2014 they reset if the page reloads.";
+  main.querySelectorAll(".progCard").forEach(btn => btn.addEventListener("click", () => {
+    state.prog = PROGRAMS.find(p => p.id === btn.dataset.prog);
+    state.day = 0; state.view = "prog";
+    render(); window.scrollTo(0,0);
+  }));
+}
+
+function renderProgram(){
+  const p = state.prog;
+  backBtn.style.display = "inline-block";
+  hTitle.textContent = p.title;
+  hSub.textContent = p.freq;
+
+  let html = "";
+  if(p.note) html += '<div class="progNote">' + p.note + '</div>';
+
+  if(p.days.length > 1){
+    html += '<div class="tabs">';
+    p.days.forEach((d,i) => {
+      html += '<button class="tab' + (i === state.day ? ' on' : '') + '" data-day="' + i + '">' + d.name + '</button>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div style="height:14px"></div>';
+  }
+
+  const t = dayTotals(p, state.day);
+  const pct = t.total ? Math.round(100 * t.done / t.total) : 0;
+  html += '<div class="progressRow">' +
+    '<div class="progressBar"><span style="width:' + pct + '%"></span></div>' +
+    '<div class="progressTxt">' + t.done + ' / ' + t.total + ' sets</div>' +
+    '<button class="resetBtn" id="resetDay">reset</button></div>';
+
+  p.days[state.day].groups.forEach((g,gi) => {
+    const rail = RAILS[gi % RAILS.length];
+    html += '<div class="group"><div class="rail" style="background:' + rail + '"></div><div class="groupBody">';
+    if(g.title) html += '<div class="groupTitle">' + g.title + '</div>';
+    if(g.sub) html += '<div class="groupSub">' + g.sub + '</div>';
+    g.items.forEach((it,ii) => {
+      html += '<div class="ex"><div class="exTop">';
+      if(it.lb) html += '<span class="lb">' + it.lb + '</span>';
+      html += '<span class="exName">' + it.name + '</span>';
+      if(it.rx) html += '<span class="rx">' + it.rx + '</span>';
+      html += '</div>';
+      if(it.notes && it.notes.length){
+        html += '<div class="exNotes">' + it.notes.map(n => '<div>' + n + '</div>').join('') + '</div>';
+      }
+      html += '<div class="exActions">';
+      if(it.url) html += '<a class="demo" href="' + it.url + '" target="_blank" rel="noopener">' + PLAY + ' Demo</a>';
+      html += '<div class="pills">';
+      for(let s=0; s<it.sets; s++){
+        const k = key(p.id, state.day, gi, ii, s);
+        const on = !!state.done[k];
+        html += '<button class="pill' + (on ? ' done' : '') + '"' +
+          (on ? ' style="background:' + rail + '"' : '') +
+          ' data-k="' + k + '" data-rail="' + rail + '">' + (s+1) + '</button>';
+      }
+      html += '</div>';
+      if(it.unit === "round") html += '<span class="pillUnit">rounds</span>';
+      html += '</div>';
+      if(it.subs && it.subs.length){
+        html += '<div class="subs">';
+        it.subs.forEach(sb => {
+          html += '<div class="sub">';
+          if(sb.url) html += '<a class="subDemo" href="' + sb.url + '" target="_blank" rel="noopener">' + PLAY + '</a>';
+          html += '<span class="subName">' + sb.name + '</span>';
+          if(sb.rx) html += '<span class="subRx">' + sb.rx + '</span>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+      html += '</div>'; // .ex
+    });
+    html += '</div></div>'; // .groupBody .group
+  });
+
+  html += '<div class="sessionNote">Tap a numbered circle to check off each set as you finish. Use reset to clear the day before your next session.</div>';
+  main.innerHTML = html;
+  foot.textContent = "";
+
+  main.querySelectorAll(".tab").forEach(tb => tb.addEventListener("click", () => {
+    state.day = +tb.dataset.day; render(); window.scrollTo(0,0);
+  }));
+  const rb = document.getElementById("resetDay");
+  if(rb) rb.addEventListener("click", () => {
+    const p2 = state.prog;
+    p2.days[state.day].groups.forEach((g,gi) => g.items.forEach((it,ii) => {
+      for(let s=0; s<it.sets; s++) delete state.done[key(p2.id, state.day, gi, ii, s)];
+    }));
+    persist();
+    render();
+  });
+  main.querySelectorAll(".pill").forEach(pl => pl.addEventListener("click", () => {
+    const k = pl.dataset.k;
+    state.done[k] = !state.done[k];
+    if(!state.done[k]) delete state.done[k];
+    persist();
+    if(state.done[k]){ pl.classList.add("done"); pl.style.background = pl.dataset.rail; }
+    else { pl.classList.remove("done"); pl.style.background = ""; }
+    // update progress bar without full re-render
+    const t2 = dayTotals(state.prog, state.day);
+    const bar = main.querySelector(".progressBar span");
+    const txt = main.querySelector(".progressTxt");
+    if(bar) bar.style.width = (t2.total ? Math.round(100*t2.done/t2.total) : 0) + "%";
+    if(txt) txt.textContent = t2.done + " / " + t2.total + " sets";
+  }));
+}
+
+render();
+</script>
+</body>
+</html>
